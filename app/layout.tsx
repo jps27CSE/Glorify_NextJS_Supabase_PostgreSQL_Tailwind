@@ -4,6 +4,7 @@ import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import SupabaseProvider from "@/providers/SupabaseProvider";
 import UserProvider from "@/providers/UserProvider";
+import ModalProvider from "@/providers/ModalProvider";
 
 const geistSans = localFont({
   src: "./fonts/Figtree-Regular.woff2",
@@ -33,6 +34,7 @@ export default function RootLayout({
       >
         <SupabaseProvider>
           <UserProvider>
+            <ModalProvider />
             <Sidebar>{children}</Sidebar>
           </UserProvider>
         </SupabaseProvider>
