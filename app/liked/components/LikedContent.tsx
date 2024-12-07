@@ -11,7 +11,7 @@ interface LikedContentProps {
   songs: Song[];
 }
 
-const LikedContent: React.FB<LikedContentProps> = ({ songs }) => {
+const LikedContent: React.FC<LikedContentProps> = ({ songs }) => {
   const router = useRouter();
   const { isLoading, user } = useUser();
 
