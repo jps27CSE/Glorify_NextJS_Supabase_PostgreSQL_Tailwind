@@ -1,6 +1,7 @@
 import React, { forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
 
+// eslint-disable-next-line
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}
 
