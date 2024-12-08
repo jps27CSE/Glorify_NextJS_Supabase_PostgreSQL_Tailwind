@@ -5,8 +5,10 @@ import { useUser } from "@/hooks/useUser";
 
 const useOnPlay = (songs: Song[]) => {
   const player = usePlayer();
+  // eslint-disable-next-line
   const authModal = useAuthModal();
 
+  // eslint-disable-next-line
   const { user } = useUser();
 
   const onPlay = (id: string) => {
