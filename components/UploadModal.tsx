@@ -46,6 +46,20 @@ const UploadModal = () => {
         return;
       }
 
+      // Validate image size
+      const maxImageSize = 75 * 1024;
+      if (imageFile.size > maxImageSize) {
+        setIsLoading(false);
+        return toast.error("Thumbnail must be 75 KB or smaller.");
+      }
+
+      // Validate song size (7 MB)
+      const maxSongSize = 7 * 1024 * 1024;
+      if (songFile.size > maxSongSize) {
+        setIsLoading(false);
+        return toast.error("Song file must be 7 MB or smaller.");
+      }
+
       const uniqueID = uniqid();
 
       const { data: songData, error: songError } = await supabaseClient.storage
