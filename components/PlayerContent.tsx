@@ -10,6 +10,8 @@ import { HiSpeakerWave, HiSpeakerXMark } from "react-icons/hi2";
 import Slider from "@/components/Slider";
 import usePlayer from "@/hooks/usePlayer";
 import useSound from "use-sound";
+import { FaForward } from "react-icons/fa";
+import { FaBackward } from "react-icons/fa6";
 
 interface PlayerContentProps {
   song: Song;
@@ -89,6 +91,20 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     }
   };
 
+  const skipForward = () => {
+    if (sound) {
+      const currentTime = sound.seek() as number;
+      sound.seek(currentTime + 5);
+    }
+  };
+
+  const skipBackward = () => {
+    if (sound) {
+      const currentTime = sound.seek() as number;
+      sound.seek(Math.max(0, currentTime - 5));
+    }
+  };
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 h-full">
       <div className="flex w-full justify-start">
@@ -116,6 +132,12 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
           onClick={onPlayPrevious}
         />
 
+        <FaBackward
+          className="text-neutral-400 cursor-pointer hover:text-white transition"
+          size={20}
+          onClick={skipBackward}
+        />
+
         <div
           onClick={handlePlay}
           className="flex items-center justify-center h-10 w-10
@@ -124,6 +146,13 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
         >
           <Icon size={30} className="text-black" />
         </div>
+
+        <FaForward
+          className="text-neutral-400 cursor-pointer hover:text-white transition"
+          size={20}
+          onClick={skipForward}
+        />
+
         <AiFillStepForward
           onClick={onPlayNext}
           size={30}
