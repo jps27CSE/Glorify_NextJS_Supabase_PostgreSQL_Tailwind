@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { useRouter } from "next/navigation";
 import { RxCaretLeft, RxCaretRight } from "react-icons/rx";
@@ -11,7 +11,7 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useUser } from "@/hooks/useUser";
 import { FaUserAlt } from "react-icons/fa";
 import toast from "react-hot-toast";
-import useRandomColor from "@/hooks/useRandomColor";
+
 interface HeaderProps {
   children: React.ReactNode;
   className?: string;
@@ -20,11 +20,23 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ children, className }) => {
   const authModal = useAuthModal();
   const router = useRouter();
-
   const supabaseClient = useSupabaseClient();
   const { user } = useUser();
 
-  const { color } = useRandomColor();
+  const [color, setColor] = useState<string>("");
+
+  const colors = [
+    "from-blue-900",
+    "from-green-900",
+    "from-red-900",
+    "from-purple-900",
+    "from-yellow-900",
+  ];
+
+  useEffect(() => {
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    setColor(randomColor);
+  }, []);
 
   const handleLogout = async () => {
     const { error } = await supabaseClient.auth.signOut();
@@ -38,13 +50,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
   };
 
   return (
-    <div
-      className={twMerge(
-        `h-fit bg-gradient-to-b ${color} p-6
-  `,
-        className,
-      )}
-    >
+    <div className={twMerge(`h-fit bg-gradient-to-b ${color} p-6`, className)}>
       <div className="w-full mb-4 flex items-center justify-between">
         <div className="hidden md:flex gap-x-2 items-center">
           <button
@@ -65,13 +71,13 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
             onClick={() => router.push("/")}
             className="rounded-full p-2 bg-white flex items-center justify-center hover:opacity-75 transition"
           >
-            <HiHome className="text-black " size={20} />
+            <HiHome className="text-black" size={20} />
           </button>
           <button
             onClick={() => router.push("/search")}
             className="rounded-full p-2 bg-white flex items-center justify-center hover:opacity-75 transition"
           >
-            <BiSearch className="text-black " size={20} />
+            <BiSearch className="text-black" size={20} />
           </button>
         </div>
         <div className="flex justify-between items-center gap-x-4">
@@ -113,4 +119,5 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
     </div>
   );
 };
+
 export default Header;
