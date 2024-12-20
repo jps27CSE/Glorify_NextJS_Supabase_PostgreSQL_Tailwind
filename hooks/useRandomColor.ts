@@ -9,7 +9,7 @@ const useRandomColor = () => {
     "from-yellow-900",
   ];
 
-  const [color, setColor] = useState("");
+  const [color, setColor] = useState<string | null>(null);
 
   const getRandomColor = () =>
     colors[Math.floor(Math.random() * colors.length)];
