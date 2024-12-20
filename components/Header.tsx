@@ -11,6 +11,7 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useUser } from "@/hooks/useUser";
 import { FaUserAlt } from "react-icons/fa";
 import toast from "react-hot-toast";
+import useRandomColor from "@/hooks/useRandomColor";
 interface HeaderProps {
   children: React.ReactNode;
   className?: string;
@@ -22,6 +23,8 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
 
   const supabaseClient = useSupabaseClient();
   const { user } = useUser();
+
+  const { color } = useRandomColor();
 
   const handleLogout = async () => {
     const { error } = await supabaseClient.auth.signOut();
@@ -37,7 +40,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
   return (
     <div
       className={twMerge(
-        `h-fit bg-gradient-to-b from-blue-900 p-6
+        `h-fit bg-gradient-to-b ${color} p-6
   `,
         className,
       )}
