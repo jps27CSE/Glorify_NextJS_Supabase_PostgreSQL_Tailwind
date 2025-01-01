@@ -9,10 +9,20 @@ const GreetingModal = () => {
 
   useEffect(() => {
     const today = new Date();
-    const christmasStart = new Date(today.getFullYear(), 11, 20);
-    const christmasEnd = new Date(today.getFullYear(), 11, 26);
-    const newYearStart = new Date(today.getFullYear(), 11, 31);
-    const newYearEnd = new Date(today.getFullYear() + 1, 0, 5);
+
+    const christmasStart = new Date(today.getFullYear(), 11, 20); // December 20
+    const christmasEnd = new Date(today.getFullYear(), 11, 26); // December 26
+    const newYearStart = new Date(
+      today.getMonth() === 0 ? today.getFullYear() - 1 : today.getFullYear(),
+      11,
+      31,
+    );
+
+    const newYearEnd = new Date(
+      today.getMonth() === 0 ? today.getFullYear() : today.getFullYear() + 1,
+      0,
+      5,
+    );
 
     if (today >= christmasStart && today <= christmasEnd) {
       setGreetingType("christmas");
