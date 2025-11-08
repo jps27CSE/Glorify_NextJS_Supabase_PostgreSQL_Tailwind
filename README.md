@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Glorify Worship Platform
 
-## Getting Started
+## Project Overview
 
-First, run the development server:
+**Glorify Worship** is a personal project aimed at preserving and sharing the worship songs sung by the members of our family. The platform features both studio-recorded and unplugged worship songs that capture the essence of our devotion and love for God. With continuous updates, we are committed to uploading new worship songs regularly for everyone to enjoy.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The platform is built using modern web technologies and offers an engaging, user-friendly experience to enjoy these sacred moments of worship.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+You can access the live platform here: [Glorify Worship](https://glorifyworship.vercel.app)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- 🎶 **New Song List:** Regular updates with new worship songs.
+- 🎙️ **Studio & Unplugged Versions:** Both studio-recorded and unplugged worship songs are available.
+- 💡 **New Design & Interface:** Improved user interface with a focus on accessibility and user experience.
+- ⏱️ **Song Playtime & Progress Bar:** Track song progress with a visual progress bar.
+- 🔊 **Volume Control:** Adjust the volume directly from the platform.
+- ⬅️➡️ **Song Navigation:** Easily skip to previous or next song.
+- 🌈 **Dynamic Color Themes:** Enjoy an engaging, customizable color theme and background.
+- 📀 **Song Categorization:** Enhanced organization of the songs for easier navigation.
 
-## Learn More
+## Installation
 
-To learn more about Next.js, take a look at the following resources:
+If you'd like to set up the project locally, follow the instructions below.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Prerequisites
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Ensure you have the following installed:
+- [Node.js](https://nodejs.org/)
+- [npm](https://www.npmjs.com/)
 
-## Deploy on Vercel
+### Steps to Run Locally
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Clone the repository:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```bash
+   git clone https://github.com/yourusername/glorifyworship.git
+
+
+2. Navigate to the project directory:
+
+   ```bash
+   cd glorifyworship
+   ```
+
+3. Install the dependencies:
+
+   ```bash
+   npm install
+   ```
+
+4. Start the development server:
+
+   ```bash
+   npm start
+   ```
+
+5. Visit `http://localhost:3000` in your browser to view the project locally.
+
+## Contributing
+
+Contributions to the project are always welcome! If you want to help, please fork the repository, create a new branch, and submit a pull request.
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## Developed By
+
+**Jack Pritom Soren** – [GitHub Profile](https://github.com/jps27CSE)
+
+## Acknowledgements
+
+* Inspiration from our family’s devotion to worship.
+* Thank you to all contributors who have made this project possible.
+
+Stay blessed and enjoy the music! ❤️
