@@ -1,9 +1,20 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import ListItem from "@/components/ListItem";
 import getSongs from "@/actions/getSongs";
 import PageContent from "@/app/(site)/components/PageContent";
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: "Glorify | Soren Family Worship Music",
+  description: "Welcome to Glorify, your music library for Soren family worship songs. Discover and manage your favorite worship music in one place.",
+  openGraph: {
+    title: "Home - Glorify",
+    description: "Stream Soren family worship music",
+    type: "website",
+  },
+};
 
 export default async function Home() {
   const songs = await getSongs();

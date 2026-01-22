@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import getSongsByTitle from "@/actions/getSongsByTitle";
 import Header from "@/components/Header";
 import SearchInput from "@/components/SearchInput";
@@ -10,6 +11,16 @@ interface SearchProps {
 }
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: "Search Worship Music - Glorify",
+  description: "Search and discover worship songs on Glorify. Find your favorite Soren family worship music easily.",
+  openGraph: {
+    title: "Search - Glorify",
+    description: "Discover Soren family worship music",
+    type: "website",
+  },
+};
 
 const Search = async ({ searchParams }: SearchProps) => {
   const songs = await getSongsByTitle(searchParams.title);

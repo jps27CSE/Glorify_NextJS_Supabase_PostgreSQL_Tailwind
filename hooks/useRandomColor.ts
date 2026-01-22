@@ -15,8 +15,7 @@ const useRandomColor = () => {
     colors[Math.floor(Math.random() * colors.length)];
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-
+    // Set color only on client side to avoid hydration mismatch
     setColor(getRandomColor());
   }, []);
 

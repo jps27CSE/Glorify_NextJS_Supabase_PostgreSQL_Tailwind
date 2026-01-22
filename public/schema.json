@@ -1,0 +1,28 @@
+{
+  "@context": "https://schema.org",
+  "@type": "MusicApplication",
+  "name": "Glorify",
+  "description": "A worship music streaming platform for Soren family worship songs",
+  "url": "https://glorifyworship.vercel.app",
+  "applicationCategory": "MusicApplication",
+  "operatingSystem": "Web, iOS, Android",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "description": "Free worship music streaming"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "250"
+  },
+  "sameAs": [
+    "https://www.facebook.com/SorenFamilyWoship.BD"
+  ],
+  "author": {
+    "@type": "Person",
+    "name": "Jack Pritom Soren",
+    "url": "https://jackpritomsorenportfolio.vercel.app/"
+  }
+}

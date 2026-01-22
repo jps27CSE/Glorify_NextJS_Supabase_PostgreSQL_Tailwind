@@ -22,8 +22,49 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Glorify",
-  description: "Listen to Worship",
+  title: "Glorify - Soren Family Worship Music Platform",
+  description: "Stream and discover worship music created by Soren family members. A dedicated platform for sharing worship songs and spiritual music.",
+  keywords: ["worship music", "streaming", "music platform", "praise and worship", "Soren family"],
+  authors: [{ name: "Jack Pritom Soren" }],
+  creator: "Jack Pritom Soren",
+  publisher: "Glorify",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://glorifyworship.vercel.app",
+    siteName: "Glorify",
+    title: "Glorify - Soren Family Worship Music Platform",
+    description: "Stream worship music created by Soren family members on Glorify.",
+    images: [
+      {
+        url: "https://glorifyworship.vercel.app/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Glorify - Soren Family Worship Music",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Glorify - Worship Music by Soren Family",
+    description: "Stream worship music created by Soren family members",
+    creator: "@glorify",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    google: "your-google-site-verification",
+  },
+  metadataBase: new URL("https://glorifyworship.vercel.app"),
 };
 
 export const revalidate = 0;
@@ -39,6 +80,7 @@ export default async function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
       >
         <ToasterProvider />
         <GreetingModal />

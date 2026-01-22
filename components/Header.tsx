@@ -35,8 +35,10 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
   ];
 
   useEffect(() => {
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-    setColor(randomColor);
+    if (typeof window !== 'undefined') {
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      setColor(randomColor);
+    }
   }, []);
 
   const handleLogout = async () => {

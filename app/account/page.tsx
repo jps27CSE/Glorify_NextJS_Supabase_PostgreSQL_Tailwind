@@ -1,9 +1,11 @@
 "use client";
+import type { Metadata } from "next";
 import { useUser } from "@/hooks/useUser";
 import { FaUserCircle, FaEnvelope, FaKey } from "react-icons/fa";
 import { HiHome } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 
+// Note: Metadata export doesn't work with "use client" - use layout metadata instead
 const Page = () => {
   const { user } = useUser();
   const router = useRouter();

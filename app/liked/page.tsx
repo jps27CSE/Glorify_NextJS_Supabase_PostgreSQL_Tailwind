@@ -1,9 +1,20 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import getLikedSongs from "@/actions/getLikedSongs";
 import Header from "@/components/Header";
 import LikedContent from "@/app/liked/components/LikedContent";
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: "Liked Songs - Glorify | Soren Family Worship Music",
+  description: "View and manage your liked songs on Glorify. Access your favorite Soren family worship music anytime.",
+  openGraph: {
+    title: "Liked Songs - Glorify",
+    description: "Your collection of favorite worship songs",
+    type: "website",
+  },
+};
 
 const Page = async () => {
   const songs = await getLikedSongs();
