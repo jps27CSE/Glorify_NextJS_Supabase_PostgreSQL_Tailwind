@@ -12,6 +12,7 @@ import usePlayer from "@/hooks/usePlayer";
 import useSound from "use-sound";
 import { FaForward } from "react-icons/fa";
 import { FaBackward } from "react-icons/fa6";
+import { FaRandom } from "react-icons/fa";
 
 interface PlayerContentProps {
   song: Song;
@@ -33,6 +34,17 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
       return;
     }
 
+    if (player.isShuffle) {
+      // Play a random song (different from current)
+      const availableSongs = player.ids.filter(id => id !== player.activeId);
+      if (availableSongs.length === 0) return;
+      
+      const randomIndex = Math.floor(Math.random() * availableSongs.length);
+      const randomSong = availableSongs[randomIndex];
+      player.setId(randomSong);
+      return;
+    }
+
     const currentIndex = player.ids.findIndex((id) => id === player.activeId);
     const nextSong = player.ids[currentIndex + 1];
 
@@ -45,6 +57,17 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
 
   const onPlayPrevious = () => {
     if (player.ids.length === 0) {
+      return;
+    }
+
+    if (player.isShuffle) {
+      // Play a random song (different from current)
+      const availableSongs = player.ids.filter(id => id !== player.activeId);
+      if (availableSongs.length === 0) return;
+      
+      const randomIndex = Math.floor(Math.random() * availableSongs.length);
+      const randomSong = availableSongs[randomIndex];
+      player.setId(randomSong);
       return;
     }
 
@@ -63,7 +86,17 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     onplay: () => setIsPlaying(true),
     onend: () => {
       setIsPlaying(false);
-      onPlayNext();
+      if (player.isShuffle) {
+        // Play a random song (different from current)
+        const availableSongs = player.ids.filter(id => id !== player.activeId);
+        if (availableSongs.length > 0) {
+          const randomIndex = Math.floor(Math.random() * availableSongs.length);
+          const randomSong = availableSongs[randomIndex];
+          player.setId(randomSong);
+        }
+      } else {
+        onPlayNext();
+      }
     },
     onpause: () => setIsPlaying(false),
     format: ["mp3"],
@@ -147,6 +180,17 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
 
       <div className="hidden h-full md:flex flex-col justify-center items-center w-full max-w-[722px] gap-y-2">
         <div className="flex items-center gap-x-6">
+          <FaRandom
+            className={`cursor-pointer transition ${
+              player.isShuffle
+                ? "text-green-500 hover:text-green-400"
+                : "text-neutral-400 hover:text-white"
+            }`}
+            size={20}
+            onClick={player.toggleShuffle}
+            title={player.isShuffle ? "Disable Shuffle" : "Enable Shuffle"}
+          />
+
           <AiFillStepBackward
             className="text-neutral-400 cursor-pointer hover:text-white transition"
             size={30}
