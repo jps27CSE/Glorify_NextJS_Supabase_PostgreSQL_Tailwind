@@ -43,6 +43,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
       return;
     }
 
+    player.setShouldPlay(true);
+
     if (player.isShuffle) {
       // Play a random song (different from current)
       const availableSongs = player.ids.filter(id => id !== player.activeId);
@@ -68,6 +70,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     if (player.ids.length === 0) {
       return;
     }
+
+    player.setShouldPlay(true);
 
     if (player.isShuffle) {
       // Play a random song (different from current)
@@ -113,10 +117,10 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   });
 
   useEffect(() => {
-    const hasInteracted = sessionStorage.getItem("hs");
-
-    if (!hasInteracted) {
-      sessionStorage.setItem("hs", "1");
+    if (player.shouldPlay) {
+      player.setShouldPlay(false);
+      sound?.play();
+    } else {
       const saved = JSON.parse(localStorage.getItem(SONG_STORAGE_KEY) || "{}");
       if (saved.id == song.id) {
         const time = parseFloat(saved.time);
@@ -125,10 +129,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
           setCurrentTime(time);
         }
       }
-      return;
     }
-
-    sound?.play();
 
     return () => {
       sound?.unload();

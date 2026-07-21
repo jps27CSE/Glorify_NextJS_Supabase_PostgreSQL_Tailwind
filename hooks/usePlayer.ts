@@ -6,6 +6,8 @@ interface PlayerStore {
   activeId?: string;
   isShuffle: boolean;
   originalIds: string[];
+  shouldPlay: boolean;
+  setShouldPlay: (value: boolean) => void;
   setId: (id: string) => void;
   setIds: (ids: string[]) => void;
   reset: () => void;
@@ -20,6 +22,8 @@ const usePlayer = create<PlayerStore>()(
       activeId: undefined,
       isShuffle: false,
       originalIds: [],
+      shouldPlay: false,
+      setShouldPlay: (value: boolean) => set({ shouldPlay: value }),
       setId: (id: string) => set({ activeId: id }),
       setIds: (ids: string[]) => set({ ids: ids, originalIds: ids }),
       reset: () => set({ ids: [], activeId: undefined, isShuffle: false, originalIds: [] }),
