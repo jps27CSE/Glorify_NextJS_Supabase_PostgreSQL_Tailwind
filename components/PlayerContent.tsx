@@ -17,7 +17,6 @@ import { FaKeyboard } from "react-icons/fa";
 import KeyboardShortcuts from "@/components/KeyboardShortcuts";
 
 const TIME_STORAGE_PREFIX = "player-time-";
-let isInitialPageLoad = true;
 
 interface PlayerContentProps {
   song: Song;
@@ -33,6 +32,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
+  const restoreTime = useRef<number | null>(null);
   const player = usePlayer();
 
   const Icon = isPlaying ? BsPauseFill : BsPlayFill;
@@ -113,16 +113,16 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   });
 
   useEffect(() => {
-    if (isInitialPageLoad) {
-      isInitialPageLoad = false;
+    const hasInteracted = sessionStorage.getItem("hs");
+
+    if (!hasInteracted) {
+      sessionStorage.setItem("hs", "1");
       const savedTime = localStorage.getItem(TIME_STORAGE_PREFIX + song.id);
       if (savedTime) {
         const time = parseFloat(savedTime);
-        if (time > 0 && sound) {
-          play();
-          sound.seek(time);
+        if (time > 0) {
+          restoreTime.current = time;
           setCurrentTime(time);
-          pause();
         }
       }
       return;
@@ -221,6 +221,10 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
 
   const handlePlay = () => {
     if (!isPlaying) {
+      if (restoreTime.current !== null) {
+        sound?.seek(restoreTime.current);
+        restoreTime.current = null;
+      }
       play();
     } else {
       pause();
