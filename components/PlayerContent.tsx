@@ -16,7 +16,7 @@ import { FaRandom } from "react-icons/fa";
 import { FaKeyboard } from "react-icons/fa";
 import KeyboardShortcuts from "@/components/KeyboardShortcuts";
 
-const TIME_STORAGE_PREFIX = "player-time-";
+const SONG_STORAGE_KEY = "player-song";
 
 interface PlayerContentProps {
   song: Song;
@@ -95,7 +95,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     onplay: () => setIsPlaying(true),
     onend: () => {
       setIsPlaying(false);
-      localStorage.removeItem(TIME_STORAGE_PREFIX + song.id);
+      localStorage.removeItem(SONG_STORAGE_KEY);
       if (player.isShuffle) {
         // Play a random song (different from current)
         const availableSongs = player.ids.filter(id => id !== player.activeId);
@@ -117,9 +117,9 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
 
     if (!hasInteracted) {
       sessionStorage.setItem("hs", "1");
-      const savedTime = localStorage.getItem(TIME_STORAGE_PREFIX + song.id);
-      if (savedTime) {
-        const time = parseFloat(savedTime);
+      const saved = JSON.parse(localStorage.getItem(SONG_STORAGE_KEY) || "{}");
+      if (saved.id == song.id) {
+        const time = parseFloat(saved.time);
         if (time > 0) {
           restoreTime.current = time;
           setCurrentTime(time);
@@ -140,7 +140,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
       if (sound && isPlaying) {
         const time = sound.seek() as number;
         setCurrentTime(time);
-        localStorage.setItem(TIME_STORAGE_PREFIX + song.id, String(time));
+        localStorage.setItem(SONG_STORAGE_KEY, JSON.stringify({ id: song.id, time }));
       }
     }, 1000);
 
