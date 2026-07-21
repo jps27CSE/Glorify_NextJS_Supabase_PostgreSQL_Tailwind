@@ -16,13 +16,18 @@ import { FaRandom } from "react-icons/fa";
 import { FaKeyboard } from "react-icons/fa";
 import KeyboardShortcuts from "@/components/KeyboardShortcuts";
 
+const TIME_STORAGE_PREFIX = "player-time-";
+
 interface PlayerContentProps {
   song: Song;
   songUrl: string;
 }
 
 const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
-  const [volume, setVolume] = useState(1);
+  const [volume, setVolume] = useState(() => {
+    const saved = localStorage.getItem("player-volume");
+    return saved ? parseFloat(saved) : 1;
+  });
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
@@ -36,6 +41,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     if (player.ids.length === 0) {
       return;
     }
+
+    player.setIsUserInitiated(true);
 
     if (player.isShuffle) {
       // Play a random song (different from current)
@@ -63,6 +70,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
       return;
     }
 
+    player.setIsUserInitiated(true);
+
     if (player.isShuffle) {
       // Play a random song (different from current)
       const availableSongs = player.ids.filter(id => id !== player.activeId);
@@ -89,6 +98,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     onplay: () => setIsPlaying(true),
     onend: () => {
       setIsPlaying(false);
+      localStorage.removeItem(TIME_STORAGE_PREFIX + song.id);
       if (player.isShuffle) {
         // Play a random song (different from current)
         const availableSongs = player.ids.filter(id => id !== player.activeId);
@@ -106,7 +116,19 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   });
 
   useEffect(() => {
-    sound?.play();
+    if (player.isUserInitiated) {
+      sound?.play();
+      player.setIsUserInitiated(false);
+    }
+
+    const savedTime = localStorage.getItem(TIME_STORAGE_PREFIX + song.id);
+    if (savedTime) {
+      const time = parseFloat(savedTime);
+      if (time > 0) {
+        sound?.seek(time);
+        setCurrentTime(time);
+      }
+    }
 
     return () => {
       sound?.unload();
@@ -116,12 +138,18 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (sound && isPlaying) {
-        setCurrentTime(sound.seek() as number);
+        const time = sound.seek() as number;
+        setCurrentTime(time);
+        localStorage.setItem(TIME_STORAGE_PREFIX + song.id, String(time));
       }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [sound, isPlaying]);
+  }, [sound, isPlaying, song.id]);
+
+  useEffect(() => {
+    localStorage.setItem("player-volume", String(volume));
+  }, [volume]);
 
   // Keyboard shortcuts
   useEffect(() => {

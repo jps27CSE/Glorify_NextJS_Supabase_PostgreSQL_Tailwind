@@ -15,6 +15,10 @@ You can access the live platform here: [Glorify Worship](https://glorifyworship.
 - 💡 **New Design & Interface:** Improved user interface with a focus on accessibility and user experience.
 - ⏱️ **Song Playtime & Progress Bar:** Track song progress with a visual progress bar.
 - 🔊 **Volume Control:** Adjust the volume directly from the platform.
+- 🔄 **Volume Persistence:** Volume level is remembered across sessions.
+- ▶️ **Continue Playing:** Last played song and position are saved — resumes on page reload.
+- 🔀 **Shuffle Mode:** Randomize song playback order.
+- ⌨️ **Keyboard Shortcuts:** Control playback without lifting your hands — Space, arrows, S, M, R, F.
 - ⬅️➡️ **Song Navigation:** Easily skip to previous or next song.
 - 🌈 **Dynamic Color Themes:** Enjoy an engaging, customizable color theme and background.
 - 📀 **Song Categorization:** Enhanced organization of the songs for easier navigation.
@@ -52,7 +56,7 @@ Ensure you have the following installed:
 4. Start the development server:
 
    ```bash
-   npm start
+   npm run dev
    ```
 
 5. Visit `http://localhost:3000` in your browser to view the project locally.
