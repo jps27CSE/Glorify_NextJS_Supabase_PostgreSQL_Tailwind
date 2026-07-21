@@ -17,6 +17,7 @@ import { FaKeyboard } from "react-icons/fa";
 import KeyboardShortcuts from "@/components/KeyboardShortcuts";
 
 const TIME_STORAGE_PREFIX = "player-time-";
+let isInitialPageLoad = true;
 
 interface PlayerContentProps {
   song: Song;
@@ -41,8 +42,6 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     if (player.ids.length === 0) {
       return;
     }
-
-    player.setIsUserInitiated(true);
 
     if (player.isShuffle) {
       // Play a random song (different from current)
@@ -69,8 +68,6 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     if (player.ids.length === 0) {
       return;
     }
-
-    player.setIsUserInitiated(true);
 
     if (player.isShuffle) {
       // Play a random song (different from current)
@@ -116,19 +113,20 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   });
 
   useEffect(() => {
-    if (player.isUserInitiated) {
-      sound?.play();
-      player.setIsUserInitiated(false);
+    if (isInitialPageLoad) {
+      isInitialPageLoad = false;
+      const savedTime = localStorage.getItem(TIME_STORAGE_PREFIX + song.id);
+      if (savedTime) {
+        const time = parseFloat(savedTime);
+        if (time > 0) {
+          sound?.seek(time);
+          setCurrentTime(time);
+        }
+      }
+      return;
     }
 
-    const savedTime = localStorage.getItem(TIME_STORAGE_PREFIX + song.id);
-    if (savedTime) {
-      const time = parseFloat(savedTime);
-      if (time > 0) {
-        sound?.seek(time);
-        setCurrentTime(time);
-      }
-    }
+    sound?.play();
 
     return () => {
       sound?.unload();

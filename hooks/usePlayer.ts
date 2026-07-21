@@ -6,8 +6,6 @@ interface PlayerStore {
   activeId?: string;
   isShuffle: boolean;
   originalIds: string[];
-  isUserInitiated: boolean;
-  setIsUserInitiated: (value: boolean) => void;
   setId: (id: string) => void;
   setIds: (ids: string[]) => void;
   reset: () => void;
@@ -22,8 +20,6 @@ const usePlayer = create<PlayerStore>()(
       activeId: undefined,
       isShuffle: false,
       originalIds: [],
-      isUserInitiated: false,
-      setIsUserInitiated: (value: boolean) => set({ isUserInitiated: value }),
       setId: (id: string) => set({ activeId: id }),
       setIds: (ids: string[]) => set({ ids: ids, originalIds: ids }),
       reset: () => set({ ids: [], activeId: undefined, isShuffle: false, originalIds: [] }),
@@ -47,9 +43,6 @@ const usePlayer = create<PlayerStore>()(
     {
       name: "player-storage",
       partialize: (state) => ({ activeId: state.activeId }),
-      onRehydrateStorage: () => (state) => {
-        state?.setIsUserInitiated(false);
-      },
     }
   )
 );
