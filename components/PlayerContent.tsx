@@ -117,9 +117,11 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   });
 
   useEffect(() => {
+    if (!sound) return;
+
     if (player.shouldPlay) {
       player.setShouldPlay(false);
-      sound?.play();
+      sound.play();
     } else {
       const saved = JSON.parse(localStorage.getItem(SONG_STORAGE_KEY) || "{}");
       if (saved.id == song.id) {
