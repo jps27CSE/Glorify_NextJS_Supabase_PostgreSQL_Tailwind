@@ -118,9 +118,11 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
       const savedTime = localStorage.getItem(TIME_STORAGE_PREFIX + song.id);
       if (savedTime) {
         const time = parseFloat(savedTime);
-        if (time > 0) {
-          sound?.seek(time);
+        if (time > 0 && sound) {
+          play();
+          sound.seek(time);
           setCurrentTime(time);
+          pause();
         }
       }
       return;
