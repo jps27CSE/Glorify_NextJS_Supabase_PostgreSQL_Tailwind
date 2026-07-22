@@ -341,12 +341,16 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
 
             <div
               ref={progressBarRef}
-              className="relative w-full h-2 bg-neutral-700 rounded-full cursor-pointer mx-4 "
+              className="relative w-full h-2 bg-neutral-700 rounded-full cursor-pointer mx-4 group"
               onClick={handleSeek}
             >
               <div
-                className="absolute top-0 left-0 h-full bg-white rounded-full hover:bg-blue-300 transition"
+                className="absolute top-0 left-0 h-full bg-white rounded-full group-hover:bg-green-500 transition"
                 style={{ width: `${progress}%` }}
+              />
+              <div
+                className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-md opacity-0 group-hover:opacity-100 transition"
+                style={{ left: `calc(${progress}% - 20px)` }}
               />
             </div>
             <span>{totalDuration}</span>

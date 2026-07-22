@@ -23,6 +23,7 @@ const Slider: React.FC<SlideProps> = ({ value = 1, onChange }) => {
         w-full
         h-10
         cursor-pointer
+        group
       "
       defaultValue={[1]}
       value={[value]}
@@ -46,9 +47,17 @@ const Slider: React.FC<SlideProps> = ({ value = 1, onChange }) => {
             bg-white
             rounded-full
             h-full
+            group-hover:bg-green-500
           "
         />
       </RadixSlider.Track>
+      <RadixSlider.Thumb
+        className="
+          block w-3 h-3 bg-white rounded-full shadow-md
+          opacity-0 group-hover:opacity-100 transition
+          focus:outline-none
+        "
+      />
     </RadixSlider.Root>
   );
 };

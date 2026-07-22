@@ -12,6 +12,8 @@ You can access the live platform here: [Glorify Worship](https://glorifyworship.
 
 - 🎶 **New Song List:** Regular updates with new worship songs.
 - 🎙️ **Studio & Unplugged Versions:** Both studio-recorded and unplugged worship songs are available.
+- 🎨 **Artists Section:** Browse artists in circular profile cards on the home page extracted from song data.
+- 👤 **Artist Pages:** Click any artist to view all their songs (including collaborations).
 - 💡 **New Design & Interface:** Improved user interface with a focus on accessibility and user experience.
 - ⏱️ **Song Playtime & Progress Bar:** Track song progress with a visual progress bar.
 - 🔊 **Volume Control:** Adjust the volume directly from the platform.

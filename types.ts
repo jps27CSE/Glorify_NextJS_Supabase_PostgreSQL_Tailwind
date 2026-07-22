@@ -52,6 +52,13 @@ export interface ProductWithPrice extends Product {
   prices?: Price[];
 }
 
+export interface Artist {
+  name: string;
+  songCount: number;
+  image_path: string | null;
+  localImagePath?: string | null;
+}
+
 export interface Subscription {
   id: string;
   user_id: string;
