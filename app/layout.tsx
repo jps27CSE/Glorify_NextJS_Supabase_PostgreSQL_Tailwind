@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Sidebar from "@/components/Sidebar";
 import SupabaseProvider from "@/providers/SupabaseProvider";
 import UserProvider from "@/providers/UserProvider";
 import ModalProvider from "@/providers/ModalProvider";
 import ToasterProvider from "@/providers/ToasterProvider";
 import getSongsByUserId from "@/actions/getSongsByUserId";
-import Player from "@/components/Player";
+import AppShell from "@/components/AppShell";
 import GreetingModal from "@/components/GreetingModal";
 
 const geistSans = localFont({
@@ -87,8 +86,7 @@ export default async function RootLayout({
         <SupabaseProvider>
           <UserProvider>
             <ModalProvider />
-            <Sidebar songs={userSongs}>{children}</Sidebar>
-            <Player />
+            <AppShell songs={userSongs}>{children}</AppShell>
           </UserProvider>
         </SupabaseProvider>
       </body>

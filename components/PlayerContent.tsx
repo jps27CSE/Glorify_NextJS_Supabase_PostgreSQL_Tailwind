@@ -3,7 +3,8 @@
 import { Song } from "@/types";
 import MediaItem from "@/components/MediaItem";
 import LikeButton from "@/components/LikeButton";
-import { BsPauseFill, BsPlayFill } from "react-icons/bs";
+import NowPlayingView from "@/components/NowPlayingView";
+import { BsPauseFill, BsPlayFill, BsRepeat, BsRepeat1 } from "react-icons/bs";
 import { AiFillStepBackward, AiFillStepForward } from "react-icons/ai";
 import { useEffect, useRef, useState } from "react";
 import { HiSpeakerWave, HiSpeakerXMark } from "react-icons/hi2";
@@ -15,15 +16,18 @@ import { FaBackward } from "react-icons/fa6";
 import { FaRandom } from "react-icons/fa";
 import { FaKeyboard } from "react-icons/fa";
 import KeyboardShortcuts from "@/components/KeyboardShortcuts";
+import { HiOutlineChevronUp } from "react-icons/hi2";
 
 const SONG_STORAGE_KEY = "player-song";
 
 interface PlayerContentProps {
   song: Song;
   songUrl: string;
+  isExpanded: boolean;
+  onExpandChange: (value: boolean) => void;
 }
 
-const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
+const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, isExpanded, onExpandChange }) => {
   const [volume, setVolume] = useState(() => {
     const saved = localStorage.getItem("player-volume");
     return saved ? parseFloat(saved) : 1;
@@ -39,20 +43,19 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   const VolumeIcon = volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
 
   const onPlayNext = () => {
-    if (player.ids.length === 0) {
+    if (player.ids.length === 0) return;
+    player.setShouldPlay(true);
+
+    if (player.repeatMode === "one") {
+      player.setId(song.id);
       return;
     }
 
-    player.setShouldPlay(true);
-
     if (player.isShuffle) {
-      // Play a random song (different from current)
       const availableSongs = player.ids.filter(id => id !== player.activeId);
       if (availableSongs.length === 0) return;
-      
       const randomIndex = Math.floor(Math.random() * availableSongs.length);
-      const randomSong = availableSongs[randomIndex];
-      player.setId(randomSong);
+      player.setId(availableSongs[randomIndex]);
       return;
     }
 
@@ -60,27 +63,28 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     const nextSong = player.ids[currentIndex + 1];
 
     if (!nextSong) {
-      return player.setId(player.ids[0]);
+      if (player.repeatMode === "all") {
+        player.setId(player.ids[0]);
+      }
+      return;
     }
 
     player.setId(nextSong);
   };
 
   const onPlayPrevious = () => {
-    if (player.ids.length === 0) {
+    if (player.ids.length === 0) return;
+    player.setShouldPlay(true);
+
+    if (currentTime > 3) {
+      sound?.seek(0);
+      setCurrentTime(0);
       return;
     }
 
-    player.setShouldPlay(true);
-
-    if (player.isShuffle) {
-      // Play a random song (different from current)
-      const availableSongs = player.ids.filter(id => id !== player.activeId);
-      if (availableSongs.length === 0) return;
-      
-      const randomIndex = Math.floor(Math.random() * availableSongs.length);
-      const randomSong = availableSongs[randomIndex];
-      player.setId(randomSong);
+    if (player.repeatMode === "one") {
+      sound?.seek(0);
+      setCurrentTime(0);
       return;
     }
 
@@ -88,7 +92,10 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     const previousSong = player.ids[currentIndex - 1];
 
     if (!previousSong) {
-      return player.setId(player.ids[player.ids.length - 1]);
+      if (player.repeatMode === "all") {
+        player.setId(player.ids[player.ids.length - 1]);
+      }
+      return;
     }
 
     player.setId(previousSong);
@@ -100,13 +107,13 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     onend: () => {
       setIsPlaying(false);
       localStorage.removeItem(SONG_STORAGE_KEY);
-      if (player.isShuffle) {
-        // Play a random song (different from current)
+      if (player.repeatMode === "one") {
+        player.setId(song.id);
+      } else if (player.isShuffle) {
         const availableSongs = player.ids.filter(id => id !== player.activeId);
         if (availableSongs.length > 0) {
           const randomIndex = Math.floor(Math.random() * availableSongs.length);
-          const randomSong = availableSongs[randomIndex];
-          player.setId(randomSong);
+          player.setId(availableSongs[randomIndex]);
         }
       } else {
         onPlayNext();
@@ -154,61 +161,42 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     localStorage.setItem("player-volume", String(volume));
   }, [volume]);
 
-  // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Prevent default for our shortcuts
-      if (['Space', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 's', 'r', 'm'].includes(event.code)) {
+      if (["Space", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "s", "r", "m"].includes(event.code)) {
         event.preventDefault();
       }
 
       switch (event.code) {
-        case 'Space':
-          // Space bar - Play/Pause
+        case "Space":
           handlePlay();
           break;
-        
-        case 'ArrowLeft':
-          // Left Arrow - Previous song
+        case "ArrowLeft":
           onPlayPrevious();
           break;
-        
-        case 'ArrowRight':
-          // Right Arrow - Next song
+        case "ArrowRight":
           onPlayNext();
           break;
-        
-        case 'ArrowUp':
-          // Up Arrow - Increase volume
-          setVolume(prev => Math.min(1, prev + 0.1));
+        case "ArrowUp":
+          setVolume((prev) => Math.min(1, prev + 0.1));
           break;
-        
-        case 'ArrowDown':
-          // Down Arrow - Decrease volume
-          setVolume(prev => Math.max(0, prev - 0.1));
+        case "ArrowDown":
+          setVolume((prev) => Math.max(0, prev - 0.1));
           break;
-        
-        case 'KeyS':
-          // S key - Toggle shuffle
+        case "KeyS":
           player.toggleShuffle();
           break;
-        
-        case 'KeyM':
-          // M key - Mute/Unmute
+        case "KeyM":
           toggleMute();
           break;
-        
-        case 'KeyR':
-          // R key - Rewind 10 seconds
+        case "KeyR":
           if (sound) {
             const newTime = Math.max(0, currentTime - 10);
             sound.seek(newTime);
             setCurrentTime(newTime);
           }
           break;
-        
-        case 'KeyF':
-          // F key - Fast forward 10 seconds
+        case "KeyF":
           if (sound) {
             const newTime = Math.min((songDuration || 0) / 1000, currentTime + 10);
             sound.seek(newTime);
@@ -218,8 +206,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [sound, isPlaying, currentTime, songDuration, player]);
 
   const handlePlay = () => {
@@ -235,10 +223,13 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   };
 
   const toggleMute = () => {
-    if (volume === 0) {
-      setVolume(1);
-    } else {
-      setVolume(0);
+    setVolume(volume === 0 ? 1 : 0);
+  };
+
+  const onSeek = (time: number) => {
+    if (sound) {
+      sound.seek(time);
+      setCurrentTime(time);
     }
   };
 
@@ -248,6 +239,17 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
       const clickX = event.clientX - rect.left;
       const progress = clickX / rect.width;
       const newTime = progress * (songDuration! / 1000);
+      sound.seek(newTime);
+      setCurrentTime(newTime);
+    }
+  };
+
+  const handleSeekForExpanded = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (sound) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const progress = clickX / rect.width;
+      const newTime = progress * ((songDuration || 0) / 1000);
       sound.seek(newTime);
       setCurrentTime(newTime);
     }
@@ -264,22 +266,32 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     : 0;
   const totalDuration = formatTime((songDuration || 0) / 1000);
 
+  const repeatIcons: Record<string, React.ReactNode> = {
+    off: <BsRepeat size={18} />,
+    all: <BsRepeat size={18} className="text-green-500" />,
+    one: <BsRepeat1 size={18} className="text-green-500" />,
+  };
+
   return (
     <>
       <div className="grid grid-cols-2 md:grid-cols-3 h-full">
-        <div className="flex w-full justify-start">
-          <div className="flex items-center gap-x-4">
+        <div
+          className="flex w-full justify-start cursor-pointer"
+          onClick={() => onExpandChange(true)}
+        >
+          <div className="flex items-center gap-x-4 group">
             <MediaItem data={song} />
-            <LikeButton songId={song.id} />
+            <HiOutlineChevronUp
+              size={16}
+              className="text-neutral-500 opacity-0 group-hover:opacity-100 transition"
+            />
           </div>
         </div>
 
         <div className="flex md:hidden col-auto w-full justify-end items-center">
           <div
             onClick={handlePlay}
-            className="h-10 w-10 flex items-center justify-center rounded-full bg-white
-        p-1 cursor-pointer
-        "
+            className="h-10 w-10 flex items-center justify-center rounded-full bg-white p-1 cursor-pointer"
           >
             <Icon size={30} className="text-black" />
           </div>
@@ -312,9 +324,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
 
             <div
               onClick={handlePlay}
-              className="flex items-center justify-center h-10 w-10
-         rounded-full bg-white p-1 cursor-pointer
-        "
+              className="flex items-center justify-center h-10 w-10 rounded-full bg-white p-1 cursor-pointer"
             >
               <Icon size={30} className="text-black" />
             </div>
@@ -330,13 +340,29 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
             <AiFillStepForward
               onClick={onPlayNext}
               size={30}
-              className="text-neutral-400 cursor-pointer hover:text-white
-        transition
-        "
+              className="text-neutral-400 cursor-pointer hover:text-white transition"
             />
+
+            <button
+              onClick={player.cycleRepeat}
+              className={`transition ${
+                player.repeatMode !== "off"
+                  ? "text-green-500 hover:text-green-400"
+                  : "text-neutral-400 hover:text-white"
+              }`}
+              title={
+                player.repeatMode === "one"
+                  ? "Repeat One"
+                  : player.repeatMode === "all"
+                  ? "Repeat All"
+                  : "Repeat Off"
+              }
+            >
+              {repeatIcons[player.repeatMode]}
+            </button>
           </div>
 
-          <div className="w-full flex items-center justify-between text-sm text-neutral-400 ">
+          <div className="w-full flex items-center justify-between text-sm text-neutral-400">
             <span>{formatTime(currentTime)}</span>
 
             <div
@@ -374,10 +400,29 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
           </div>
         </div>
       </div>
-      
-      <KeyboardShortcuts 
-        isOpen={isShortcutsModalOpen} 
-        onChange={setIsShortcutsModalOpen} 
+
+      <KeyboardShortcuts
+        isOpen={isShortcutsModalOpen}
+        onChange={setIsShortcutsModalOpen}
+      />
+
+      <NowPlayingView
+        song={song}
+        isOpen={isExpanded}
+        onClose={() => onExpandChange(false)}
+        isPlaying={isPlaying}
+        currentTime={currentTime}
+        volume={volume}
+        songDuration={songDuration}
+        progress={progress}
+        formatTime={formatTime}
+        handlePlay={handlePlay}
+        handleSeekClick={handleSeekForExpanded}
+        onSeek={onSeek}
+        onPlayNext={onPlayNext}
+        onPlayPrevious={onPlayPrevious}
+        onVolumeChange={(value) => setVolume(value)}
+        onToggleMute={toggleMute}
       />
     </>
   );
