@@ -10,6 +10,7 @@ import {
   FiUpload,
   FiLogOut,
   FiExternalLink,
+  FiArchive,
 } from "react-icons/fi";
 import StorageBadge from "./StorageBadge";
 
@@ -18,6 +19,7 @@ const navItems = [
   { icon: FiMusic, label: "Songs", href: "/admin/songs" },
   { icon: FiUsers, label: "Users", href: "/admin/users" },
   { icon: FiUpload, label: "Upload", href: "/admin/upload" },
+  { icon: FiArchive, label: "Backup", href: "/admin/backup" },
 ];
 
 const AdminSidebar = () => {

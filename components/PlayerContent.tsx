@@ -274,16 +274,17 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl, isExpanded
 
   return (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-3 h-full">
+      <div className="grid grid-cols-2 md:grid-cols-3 h-full overflow-hidden">
         <div
-          className="flex w-full justify-start cursor-pointer"
+          className="flex w-full justify-start cursor-pointer min-w-0 overflow-hidden"
           onClick={() => onExpandChange(true)}
         >
-          <div className="flex items-center gap-x-4 group">
+          <div className="flex items-center gap-x-2 group min-w-0">
             <MediaItem data={song} />
+            <LikeButton songId={song.id} />
             <HiOutlineChevronUp
               size={16}
-              className="text-neutral-500 opacity-0 group-hover:opacity-100 transition"
+              className="text-neutral-500 opacity-0 group-hover:opacity-100 transition flex-shrink-0"
             />
           </div>
         </div>

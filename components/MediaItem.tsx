@@ -27,6 +27,7 @@ const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
         cursor-pointer
         hover:bg-neutral-800/50
         w-full
+        min-w-0
         p-2
         rounded-md
       "
@@ -38,6 +39,7 @@ const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
           min-h-[48px]
           min-w-[48px]
           overflow-hidden
+          flex-shrink-0
         "
       >
         <Image
@@ -47,7 +49,7 @@ const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
           className="object-cover"
         />
       </div>
-      <div className="flex flex-col gap-y-1 overflow-hidden">
+      <div className="flex-col gap-y-1 overflow-hidden min-w-0 hidden sm:flex">
         <p className="text-white truncate">{data.title}</p>
         <p className="text-neutral-400 text-sm truncate">{data.author}</p>
       </div>

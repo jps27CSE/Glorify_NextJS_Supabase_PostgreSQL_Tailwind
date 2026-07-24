@@ -6,7 +6,7 @@ import { Song } from "@/types";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import EditModal from "./EditModal";
 import DeleteModal from "./DeleteModal";
-import { FiEdit2, FiTrash2, FiPlus, FiSearch } from "react-icons/fi";
+import { FiEdit2, FiTrash2, FiPlus, FiSearch, FiDownload } from "react-icons/fi";
 import toast from "react-hot-toast";
 
 interface AdminContentProps {
@@ -77,7 +77,7 @@ const AdminContent: React.FC<AdminContentProps> = ({ songs, fileSizes }) => {
       </div>
 
       <div className="bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden">
-        <div className="hidden md:grid grid-cols-[44px_1fr_1fr_100px_100px_90px] gap-3 px-4 py-3 bg-neutral-950 border-b border-neutral-800 text-neutral-500 text-xs font-medium uppercase tracking-wider">
+          <div className="hidden md:grid grid-cols-[44px_1fr_1fr_100px_100px_120px] gap-3 px-4 py-3 bg-neutral-950 border-b border-neutral-800 text-neutral-500 text-xs font-medium uppercase tracking-wider">
           <div></div>
           <div>Title</div>
           <div>Author</div>
@@ -105,7 +105,7 @@ const AdminContent: React.FC<AdminContentProps> = ({ songs, fileSizes }) => {
               return (
                 <div
                   key={song.id}
-                  className="grid grid-cols-[44px_1fr] md:grid-cols-[44px_1fr_1fr_100px_100px_90px] gap-3 px-4 py-2.5 items-center hover:bg-neutral-800/50 transition"
+                  className="grid grid-cols-[44px_1fr] md:grid-cols-[44px_1fr_1fr_100px_100px_120px] gap-3 px-4 py-2.5 items-center hover:bg-neutral-800/50 transition"
                 >
                   <div>
                     {imageUrl ? (
@@ -147,6 +147,21 @@ const AdminContent: React.FC<AdminContentProps> = ({ songs, fileSizes }) => {
                   </div>
 
                   <div className="flex items-center justify-center gap-x-1.5">
+                    <button
+                      onClick={() => {
+                        const { data } = supabaseClient.storage
+                          .from("songs")
+                          .getPublicUrl(song.song_path);
+                        const a = document.createElement("a");
+                        a.href = data.publicUrl;
+                        a.download = `${song.title} - ${song.author}.mp3`;
+                        a.click();
+                      }}
+                      className="p-1.5 rounded-md bg-neutral-800 hover:bg-blue-600/20 text-neutral-400 hover:text-blue-400 transition"
+                      title="Download"
+                    >
+                      <FiDownload size={13} />
+                    </button>
                     <button
                       onClick={() => setEditSong(song)}
                       className="p-1.5 rounded-md bg-neutral-800 hover:bg-neutral-700 text-neutral-400 hover:text-white transition"
